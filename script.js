@@ -56,14 +56,28 @@ const DOMController = (function () {
     const handleCellClick = () => {
         const cells = document.querySelectorAll(".cell");
         for (const cell of cells) {
-            cell.addEventListener("click", (e) => {
-                const index = e.target.dataset.index;
-                if (game.placePlayer(index, game.getCurrentPlayer())) {
-                    e.target.textContent = game.getCurrentPlayer().getSymbol();
-                    game.switchPlayer();
-                }
-            })
+            cell.addEventListener("click", placeDOMPlayer);
         }
     }
+
+    const placeDOMPlayer = (e) => {
+        const index = e.target.dataset.index;
+        if (game.placePlayer(index, game.getCurrentPlayer())) {
+            e.target.textContent = game.getCurrentPlayer().getSymbol();
+            game.switchPlayer();
+            announcePlayerTurn();
+        }
+    }
+
+    const announcePlayerTurn = () => {
+        const currentPlayer = game.getCurrentPlayer();
+        updateFeedback(`It is ${currentPlayer.getName()} (${currentPlayer.getSymbol()}) turn.`);
+    }
+
+    const updateFeedback = (text) => {
+        const p = document.querySelector(".feedback");
+        p.textContent = text;
+    }
     handleCellClick();
+    announcePlayerTurn();
 })();
