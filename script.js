@@ -8,6 +8,7 @@ function createPlayer(name, symbol) {
 function createGameboard(initialBoard = new Array(9).fill(null)) {
     const board = initialBoard;
     const placePlayer = (index, player) => {
+        console.log(board[index])
         if (board[index]) {
             return false;
         }
@@ -42,20 +43,27 @@ function createGame(player1, player2, initialBoard) {
         currentPlayer = currentPlayer === 0 ? 1 : 0;
     }
     const getCurrentPlayer = () => players[currentPlayer];
-    const placePlayer = (index) => {
-        if (board.placePlayer(index)) {
-            switchPlayer();
-        }
-    }
 
-    return { getCurrentPlayer, placePlayer }
+
+    return { getCurrentPlayer, placePlayer: board.placePlayer, switchPlayer }
 }
-
-
 
 const DOMController = (function () {
     const game = createGame(
         { name: "player one", symbol: "x" },
         { name: "player two", symbol: "o" }
     );
+    const handleCellClick = () => {
+        const cells = document.querySelectorAll(".cell");
+        for (const cell of cells) {
+            cell.addEventListener("click", (e) => {
+                const index = e.target.dataset.index;
+                if (game.placePlayer(index, game.getCurrentPlayer())) {
+                    e.target.textContent = game.getCurrentPlayer().getSymbol();
+                    game.switchPlayer();
+                }
+            })
+        }
+    }
+    handleCellClick();
 })();

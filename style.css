@@ -8,3 +8,25 @@
 body {
     min-height: 100vh;
 }
+
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.board {
+    display: grid;
+    width: 600px;
+    height: 600px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    border: 1px solid black;
+}
+
+.cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+}
