@@ -8,11 +8,36 @@ function createPlayer(name, symbol) {
 function createGameboard(initialBoard = new Array(9).fill(null)) {
     const board = initialBoard;
     const placePlayer = (row, column, player) => board[3 * row + column] = player;
+    const checkWin = () => {
+        const winningPositions = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [6, 4, 2]
+        ]
+        for (const [x, y, z] of winningPositions) {
+            if (!board[x]) continue;
+            if (board[x] === board[y] && board[y] === board[z]) {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    const getCellSymbol = (row, column) => {
+        const player = board[3 * row + column];
+        return player ? player.getSymbol() : " ";
+    }
 
+    const printBoard = () => {
+        for (let i = 0; i < 3; i++) {
+            console.log(`${getCellSymbol(i, 0)} | ${getCellSymbol(i, 1)} | ${getCellSymbol(i, 2)}`);
+            if (i !== 2) {
+                console.log("---------")
+            }
+        }
+    }
 
-
-    return { placePlayer, checkWin }
+    return { placePlayer, checkWin, printBoard }
 }
 
 function createGame(player1, player2, initialBoard) {
@@ -32,6 +57,11 @@ function createGame(player1, player2, initialBoard) {
         const move = prompt("What is your move?: ");
         const cords = move.split(",");
         board.placePlayer(Number(cords[0]), Number(cords[1]), getCurrentPlayer());
+        board.printBoard();
+        if (board.checkWin()) {
+            winner = getCurrentPlayer();
+            break;
+        }
         switchPlayer();
     } while (!winner);
 }
