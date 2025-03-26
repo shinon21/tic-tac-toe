@@ -22,22 +22,7 @@ function createGameboard(initialBoard = new Array(9).fill(null)) {
         }
         return false;
     }
-
-    const getCellSymbol = (row, column) => {
-        const player = board[3 * row + column];
-        return player ? player.getSymbol() : " ";
-    }
-
-    const printBoard = () => {
-        for (let i = 0; i < 3; i++) {
-            console.log(`${getCellSymbol(i, 0)} | ${getCellSymbol(i, 1)} | ${getCellSymbol(i, 2)}`);
-            if (i !== 2) {
-                console.log("---------")
-            }
-        }
-    }
-
-    return { placePlayer, checkWin, printBoard }
+    return { placePlayer, checkWin }
 }
 
 function createGame(player1, player2, initialBoard) {
@@ -51,19 +36,6 @@ function createGame(player1, player2, initialBoard) {
         currentPlayer = currentPlayer === 0 ? 1 : 0;
     }
     const getCurrentPlayer = () => players[currentPlayer];
-    let winner;
-    do {
-        console.log(`It is ${getCurrentPlayer().getName()}'s turn`);
-        const move = prompt("What is your move?: ");
-        const cords = move.split(",");
-        board.placePlayer(Number(cords[0]), Number(cords[1]), getCurrentPlayer());
-        board.printBoard();
-        if (board.checkWin()) {
-            winner = getCurrentPlayer();
-            break;
-        }
-        switchPlayer();
-    } while (!winner);
 }
 
 createGame(
