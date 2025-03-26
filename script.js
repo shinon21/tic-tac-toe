@@ -7,7 +7,13 @@ function createPlayer(name, symbol) {
 
 function createGameboard(initialBoard = new Array(9).fill(null)) {
     const board = initialBoard;
-    const placePlayer = (row, column, player) => board[3 * row + column] = player;
+    const placePlayer = (index, player) => {
+        if (board[index]) {
+            return false;
+        }
+        board[index] = player;
+        return true;
+    }
     const checkWin = () => {
         const winningPositions = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8],
@@ -36,9 +42,20 @@ function createGame(player1, player2, initialBoard) {
         currentPlayer = currentPlayer === 0 ? 1 : 0;
     }
     const getCurrentPlayer = () => players[currentPlayer];
+    const placePlayer = (index) => {
+        if (board.placePlayer(index)) {
+            switchPlayer();
+        }
+    }
+
+    return { getCurrentPlayer, placePlayer }
 }
 
-createGame(
-    { name: "player one", symbol: "x" },
-    { name: "player two", symbol: "o" }
-);
+
+
+const DOMController = (function () {
+    const game = createGame(
+        { name: "player one", symbol: "x" },
+        { name: "player two", symbol: "o" }
+    );
+})();
