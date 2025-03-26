@@ -8,7 +8,6 @@ function createPlayer(name, symbol) {
 function createGameboard(initialBoard = new Array(9).fill(null)) {
     const board = initialBoard;
     const placePlayer = (index, player) => {
-        console.log(board[index])
         if (board[index]) {
             return false;
         }
@@ -68,7 +67,7 @@ function createGame(player1, player2, initialBoard) {
 }
 
 const DOMController = (function () {
-    const game = createGame(
+    let game = createGame(
         { name: "player one", symbol: "x" },
         { name: "player two", symbol: "o" }
     );
@@ -104,6 +103,21 @@ const DOMController = (function () {
         }
     }
 
+    const handleResetButton = () => {
+        const button = document.querySelector(".reset");
+        button.addEventListener("click", (e) => {
+            for (const cell of cells) {
+                cell.textContent = " ";
+                cell.disabled = false;
+            }
+            game = createGame(
+                { name: "player one", symbol: "x" },
+                { name: "player two", symbol: "o" }
+            );
+            announcePlayerTurn();
+        })
+    }
+
     const announceTie = () => {
         updateFeedback("It is a tie!!")
     }
@@ -123,5 +137,6 @@ const DOMController = (function () {
         p.textContent = text;
     }
     handleCellClick();
+    handleResetButton();
     announcePlayerTurn();
 })();
