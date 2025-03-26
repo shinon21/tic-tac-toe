@@ -45,7 +45,12 @@ function createGame(player1, player2, initialBoard) {
     const getCurrentPlayer = () => players[currentPlayer];
 
 
-    return { getCurrentPlayer, placePlayer: board.placePlayer, switchPlayer }
+    return {
+        getCurrentPlayer,
+        placePlayer: board.placePlayer,
+        switchPlayer,
+        checkWin: board.checkWin
+    }
 }
 
 const DOMController = (function () {
@@ -53,8 +58,8 @@ const DOMController = (function () {
         { name: "player one", symbol: "x" },
         { name: "player two", symbol: "o" }
     );
+    const cells = document.querySelectorAll(".cell");
     const handleCellClick = () => {
-        const cells = document.querySelectorAll(".cell");
         for (const cell of cells) {
             cell.addEventListener("click", placeDOMPlayer);
         }
@@ -64,9 +69,25 @@ const DOMController = (function () {
         const index = e.target.dataset.index;
         if (game.placePlayer(index, game.getCurrentPlayer())) {
             e.target.textContent = game.getCurrentPlayer().getSymbol();
+            if (game.checkWin()) {
+                handleGameOver();
+                return;
+            }
             game.switchPlayer();
             announcePlayerTurn();
         }
+    }
+
+    const handleGameOver = () => {
+        for (const cell of cells) {
+            cell.disabled = true;
+        }
+        announceWinner();
+    }
+
+    const announceWinner = () => {
+        const player = game.getCurrentPlayer();
+        updateFeedback(`${player.getName()} has won the game!`);
     }
 
     const announcePlayerTurn = () => {
