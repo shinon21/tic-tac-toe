@@ -5,18 +5,14 @@ function createPlayer(name, symbol) {
     return { getName, getSymbol }
 }
 
-function createGameboard(initialBoard = [null, null, null].fill([null, null, null], 0)) {
+function createGameboard(initialBoard = new Array(9).fill(null)) {
     const board = initialBoard;
-    const placePlayer = (row, column, player) => {
-        console.log(board);
-        if (!board[row][column]) {
-            board[row][column] = player;
-            return true;
-        }
-        return false;
-    }
+    const placePlayer = (row, column, player) => board[3 * row + column] = player;
 
-    return { placePlayer }
+
+
+
+    return { placePlayer, checkWin }
 }
 
 function createGame(player1, player2, initialBoard) {
@@ -37,7 +33,6 @@ function createGame(player1, player2, initialBoard) {
         const cords = move.split(",");
         board.placePlayer(Number(cords[0]), Number(cords[1]), getCurrentPlayer());
         switchPlayer();
-
     } while (!winner);
 }
 
