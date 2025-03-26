@@ -18,8 +18,8 @@ main {
 
 .board {
     display: grid;
-    width: 600px;
-    height: 600px;
+    width: 500px;
+    height: 500px;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     border: 1px solid black;
@@ -30,4 +30,15 @@ main {
     align-items: center;
     justify-content: center;
     border: 1px solid black;
+    font-size: 2rem;
+}
+
+.feedback {
+    font-size: 1.2rem;
+}
+
+.reset {
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    text-transform: uppercase;
 }
