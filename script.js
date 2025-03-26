@@ -29,7 +29,12 @@ function createGameboard(initialBoard = new Array(9).fill(null)) {
         }
         return false;
     }
-    return { placePlayer, checkWin }
+
+    const checkTie = () => {
+        return board.every((value) => value !== null);
+    }
+
+    return { placePlayer, checkWin, checkTie }
 }
 
 function createGame(player1, player2, initialBoard) {
@@ -44,12 +49,21 @@ function createGame(player1, player2, initialBoard) {
     }
     const getCurrentPlayer = () => players[currentPlayer];
 
+    const checkGameOver = () => {
+        if (board.checkTie()) {
+            return "tie";
+        } else if (board.checkWin()) {
+            return "win";
+        } else {
+            return false;
+        }
+    }
 
     return {
         getCurrentPlayer,
         placePlayer: board.placePlayer,
         switchPlayer,
-        checkWin: board.checkWin
+        checkGameOver
     }
 }
 
@@ -69,8 +83,9 @@ const DOMController = (function () {
         const index = e.target.dataset.index;
         if (game.placePlayer(index, game.getCurrentPlayer())) {
             e.target.textContent = game.getCurrentPlayer().getSymbol();
-            if (game.checkWin()) {
-                handleGameOver();
+            const result = game.checkGameOver();
+            if (result) {
+                handleGameOver(result);
                 return;
             }
             game.switchPlayer();
@@ -78,11 +93,19 @@ const DOMController = (function () {
         }
     }
 
-    const handleGameOver = () => {
+    const handleGameOver = (result) => {
         for (const cell of cells) {
             cell.disabled = true;
         }
-        announceWinner();
+        if (result === "win") {
+            announceWinner();
+        } else {
+            announceTie();
+        }
+    }
+
+    const announceTie = () => {
+        updateFeedback("It is a tie!!")
     }
 
     const announceWinner = () => {
